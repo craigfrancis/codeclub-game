@@ -21,7 +21,7 @@
 	$territories = [];
 
 	$territories[1] = [
-			'name'       => 'Great Britain',
+			'name'       => 'Great Britan',
 			'colour'     => 'F07857',
 			'battalions' => 10,
 			'owner'      => 'Craig',
@@ -43,7 +43,7 @@
 			'army'       => 'MyArmy',
 		];
 	$territories[31] = [
-			'name'       => 'Quebec',
+			'name'       => 'Queubec',
 			'colour'     => 'D49137',
 			'battalions' => 314159265,
 			'owner'      => 'Someone',
