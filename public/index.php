@@ -18,6 +18,43 @@
 
 	}
 
+
+
+	mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+	$mysqli = new mysqli('localhost', 'stage', 'st8ge', 's-codeclub-game');
+	$mysqli->set_charset('utf8mb4');
+
+
+
+
+	$query = 'SELECT * FROM world_game_army WHERE true ORDER BY army_name LIMIT 3';
+
+	$result = $mysqli->execute_query($query, []);
+
+	foreach ($result as $row) {
+		print_r($row);
+	}
+
+
+	echo '--------------------------------------------------' . "\n\n";
+
+	$query = 'SELECT * FROM world_territories WHERE true ORDER BY army';
+
+	$result = $mysqli->execute_query($query, []);
+
+	foreach ($result as $row) {
+		print_r($row);
+	}
+
+	exit();
+
+
+
+
+
+
+
 	$territories = [];
 
 	$territories[1] = [
