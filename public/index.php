@@ -27,6 +27,44 @@
 
 
 
+	$new_battalions = rand(50, 100);
+
+
+	// $query = '
+	// 		INSERT world_game_army (
+	// 			id,
+	// 			army_colour,
+	// 			army_name
+	//
+	// 		) VALUES (
+	// 			16,
+	// 			"FFFFFF",
+	// 			"Maniacs"
+	//
+	// 		)';
+	//
+	// $result = $mysqli->execute_query($query, [
+	// ]);
+
+
+
+
+	$query = '
+			UPDATE
+				world_game_army
+			SET
+				army_colour = "00acff"
+			WHERE
+				id = 16';
+
+	$result = $mysqli->execute_query($query,[
+
+	]);
+
+
+	exit('uvytvtyfty?');
+
+
 
 	$query = 'SELECT * FROM world_game_army WHERE true ORDER BY army_name LIMIT 3';
 
