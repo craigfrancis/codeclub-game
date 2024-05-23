@@ -27,7 +27,7 @@
 
 
 
-	$new_battalions = rand(50, 100);
+	// $new_battalions = rand(50, 100);
 
 
 	// $query = '
@@ -49,43 +49,136 @@
 
 
 
-	$query = '
-			UPDATE
-				world_game_army
-			SET
-				army_colour = "00acff"
-			WHERE
-				id = 16';
-
-	$result = $mysqli->execute_query($query,[
-
-	]);
-
-
-	exit('uvytvtyfty?');
+	// $query = '
+	// 		UPDATE
+	// 			world_game_army
+	// 		SET
+	// 			army_colour = "00acff"
+	// 		WHERE
+	// 			id = 16';
+	//
+	// $result = $mysqli->execute_query($query,[
+	//
+	// ]);
 
 
 
-	$query = 'SELECT * FROM world_game_army WHERE true ORDER BY army_name LIMIT 3';
 
-	$result = $mysqli->execute_query($query, []);
+	// $query = 'SELECT * FROM world_game_army WHERE true ORDER BY army_name LIMIT 3';
+	//
+	// $result = $mysqli->execute_query($query, []);
+	//
+	// foreach ($result as $row) {
+	// 	print_r($row);
+	// }
 
-	foreach ($result as $row) {
-		print_r($row);
+
+	// echo '--------------------------------------------------' . "\n\n";
+	//
+	// $query = 'SELECT * FROM world_territories WHERE true ORDER BY army';
+	//
+	// $result = $mysqli->execute_query($query, []);
+	//
+	// foreach ($result as $row) {
+	// 	print_r($row);
+	// }
+	//
+	// exit();
+
+
+
+
+
+
+	if (($_POST['action'] ?? '') == 'Recruit Battalions') {
+
+
+
+			$query = '
+					SELECT
+						battalions
+					FROM
+						world_owner
+					WHERE
+						army_id = 3 AND
+						deleted = "0000-00-00 00:00:00"';
+
+			$result = $mysqli->execute_query($query, []);
+
+			if ($row = $result->fetch_assoc()) {
+				$current_battalions = $row['battalions'];
+			}
+
+			$current_battalions += 5;
+
+
+
+
+
+			$query = '
+					UPDATE
+						world_owner
+					SET
+						deleted = NOW()
+					WHERE
+						army_id = 3 AND
+						deleted = "0000-00-00 00:00:00"';
+
+			$result = $mysqli->execute_query($query,[
+
+			]);
+
+
+
+
+			$query = '
+					INSERT world_owner (
+						territory_id,
+						army_id,
+						battalions,
+						created,
+						deleted)
+
+					 VALUES (
+						1,
+						3,
+						?,
+						NOW(),
+						"0000-00-00 00:00:00"
+
+					)';
+
+			$result = $mysqli->execute_query($query, [
+				$current_battalions
+			]);
+
+
+
+
+
+
+			// $query = '
+			// 		UPDATE
+			// 			world_owner
+			// 		SET
+			// 			battalions = 35
+			// 		WHERE
+			// 			army_id = 3 AND
+			// 			battalions = 30';
+			//
+			// $result = $mysqli->execute_query($query,[
+			//
+			// ]);
+
+			//UPDATE world_owner
+			//SET battalions = 35
+			//
+		//SET
+
+
+		//exit('Recruited Battalions');
+
 	}
-
-
-	echo '--------------------------------------------------' . "\n\n";
-
-	$query = 'SELECT * FROM world_territories WHERE true ORDER BY army';
-
-	$result = $mysqli->execute_query($query, []);
-
-	foreach ($result as $row) {
-		print_r($row);
-	}
-
-	exit();
 
 
 
@@ -184,6 +277,10 @@
 <body>
 
 	<h1>Testing</h1>
+
+	<form action="./" method="post">
+		<input type="submit" name="action" value="Recruit Battalions" />
+	</form>
 
 	<table>
 		<caption>Map Information</caption>
