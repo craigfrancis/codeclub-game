@@ -90,7 +90,7 @@ INSERT INTO `world_game_army` VALUES
 (13,'FF90FF','Japanese'),
 (14,'FFA811','Egyptians'),
 (15,'FFFF00','Byzantines'),
-(16,'00acff','Maniacs');
+(16,'2024-0','Maniacs');
 /*!40000 ALTER TABLE `world_game_army` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,7 +118,26 @@ CREATE TABLE `world_owner` (
 LOCK TABLES `world_owner` WRITE;
 /*!40000 ALTER TABLE `world_owner` DISABLE KEYS */;
 INSERT INTO `world_owner` VALUES
-(1,3,30,'2024-05-16 17:53:51','0000-00-00 00:00:00'),
+(1,3,75,'2024-05-23 22:16:13','0000-00-00 00:00:00'),
+(1,3,35,'2024-05-16 17:53:51','2024-05-23 17:54:38'),
+(1,3,35,'2024-05-23 17:54:38','2024-05-23 17:59:42'),
+(1,3,35,'2024-05-23 17:59:42','2024-05-23 18:00:08'),
+(1,3,35,'2024-05-23 18:00:08','2024-05-23 18:01:09'),
+(1,3,35,'2024-05-23 18:01:09','2024-05-23 18:39:45'),
+(1,3,35,'2024-05-23 18:39:45','2024-05-23 18:39:51'),
+(1,3,40,'2024-05-23 18:39:51','2024-05-23 18:40:03'),
+(1,3,40,'2024-05-23 18:40:03','2024-05-23 18:40:04'),
+(1,3,40,'2024-05-23 18:40:04','2024-05-23 18:40:08'),
+(1,3,40,'2024-05-23 18:40:08','2024-05-23 18:40:09'),
+(1,3,40,'2024-05-23 18:40:09','2024-05-23 18:40:10'),
+(1,3,40,'2024-05-23 18:40:10','2024-05-23 18:40:11'),
+(1,3,40,'2024-05-23 18:40:11','2024-05-23 18:40:30'),
+(1,3,45,'2024-05-23 18:40:30','2024-05-23 18:40:31'),
+(1,3,50,'2024-05-23 18:40:31','2024-05-23 18:40:32'),
+(1,3,55,'2024-05-23 18:40:32','2024-05-23 18:41:30'),
+(1,3,60,'2024-05-23 18:41:30','2024-05-23 22:14:45'),
+(1,3,65,'2024-05-23 22:14:45','2024-05-23 22:16:03'),
+(1,3,70,'2024-05-23 22:16:03','2024-05-23 22:16:13'),
 (2,5,40,'2024-05-16 17:59:24','0000-00-00 00:00:00'),
 (5,5,40,'2024-05-16 18:00:40','0000-00-00 00:00:00'),
 (5,5,40,'2024-05-16 18:00:11','2024-05-16 18:00:38'),
@@ -137,9 +156,6 @@ DROP TABLE IF EXISTS `world_territories`;
 CREATE TABLE `world_territories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` tinytext NOT NULL,
-  `battalions` int(10) unsigned NOT NULL,
-  `owner` tinytext NOT NULL,
-  `army` tinytext NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -151,48 +167,48 @@ CREATE TABLE `world_territories` (
 LOCK TABLES `world_territories` WRITE;
 /*!40000 ALTER TABLE `world_territories` DISABLE KEYS */;
 INSERT INTO `world_territories` VALUES
-(1,'Great Britain',10,'Craig','MyArmy'),
-(2,'Western Europe',5,'Craig','MyArmy'),
-(3,'Southern Europe',5,'Craig','MyArmy'),
-(4,'Northern Europe',5,'Craig','MyArmy'),
-(5,'Ukraine',5,'Craig','MyArmy'),
-(6,'Scandinavia',5,'Craig','MyArmy'),
-(7,'Iceland',5,'Craig','MyArmy'),
-(8,'Afghanistan',5,'Craig','MyArmy'),
-(9,'Middle East',5,'Craig','MyArmy'),
-(10,'India',5,'Craig','MyArmy'),
-(11,'China',5,'Craig','MyArmy'),
-(12,'Mongolia',5,'Craig','MyArmy'),
-(13,'Ural',5,'Craig','MyArmy'),
-(14,'Siberia',5,'Craig','MyArmy'),
-(15,'Irkutsk',5,'Craig','MyArmy'),
-(16,'Kamchatka',5,'Craig','MyArmy'),
-(17,'Yakutsk',5,'Craig','MyArmy'),
-(18,'Japan',5,'Craig','MyArmy'),
-(19,'Siam',5,'Craig','MyArmy'),
-(20,'Egypt',5,'Craig','MyArmy'),
-(21,'North Africa',5,'Craig','MyArmy'),
-(22,'East Africa',5,'Craig','MyArmy'),
-(23,'Congo',5,'Craig','MyArmy'),
-(24,'South Africa',5,'Craig','MyArmy'),
-(25,'Madagascar',5,'Craig','MyArmy'),
-(26,'Indonesia',5,'Craig','MyArmy'),
-(27,'New Guinea',5,'Craig','MyArmy'),
-(28,'Eastern Australia',5,'Craig','MyArmy'),
-(29,'Western Australia',5,'Craig','MyArmy'),
-(30,'Greenland',5,'Craig','MyArmy'),
-(31,'Quebec',5,'Craig','MyArmy'),
-(32,'Eastern United States',5,'Craig','MyArmy'),
-(33,'Ontario',5,'Craig','MyArmy'),
-(34,'Northwest Territory',5,'Craig','MyArmy'),
-(35,'Alberta',5,'Craig','MyArmy'),
-(36,'Western United States',5,'Craig','MyArmy'),
-(37,'Alaska',5,'Craig','MyArmy'),
-(38,'Central America',5,'Craig','MyArmy'),
-(39,'Venezuela',5,'Craig','MyArmy'),
-(40,'Brazil',5,'Craig','MyArmy'),
-(41,'Peru',5,'Craig','MyArmy'),
-(42,'Argentina',5,'Craig','MyArmy');
+(1,'Great Britain'),
+(2,'Western Europe'),
+(3,'Southern Europe'),
+(4,'Northern Europe'),
+(5,'Ukraine'),
+(6,'Scandinavia'),
+(7,'Iceland'),
+(8,'Afghanistan'),
+(9,'Middle East'),
+(10,'India'),
+(11,'China'),
+(12,'Mongolia'),
+(13,'Ural'),
+(14,'Siberia'),
+(15,'Irkutsk'),
+(16,'Kamchatka'),
+(17,'Yakutsk'),
+(18,'Japan'),
+(19,'Siam'),
+(20,'Egypt'),
+(21,'North Africa'),
+(22,'East Africa'),
+(23,'Congo'),
+(24,'South Africa'),
+(25,'Madagascar'),
+(26,'Indonesia'),
+(27,'New Guinea'),
+(28,'Eastern Australia'),
+(29,'Western Australia'),
+(30,'Greenland'),
+(31,'Quebec'),
+(32,'Eastern United States'),
+(33,'Ontario'),
+(34,'Northwest Territory'),
+(35,'Alberta'),
+(36,'Western United States'),
+(37,'Alaska'),
+(38,'Central America'),
+(39,'Venezuela'),
+(40,'Brazil'),
+(41,'Peru'),
+(42,'Argentina');
 /*!40000 ALTER TABLE `world_territories` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -205,4 +221,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-16 22:31:05
+-- Dump completed on 2024-05-23 22:17:10
