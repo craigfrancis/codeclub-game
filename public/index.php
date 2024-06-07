@@ -31,7 +31,7 @@
 
 
 	// $query = '
-	// 		INSERT world_game_army (
+	// 		INSERT world_army (
 	// 			id,
 	// 			army_colour,
 	// 			army_name
@@ -51,7 +51,7 @@
 
 	// $query = '
 	// 		UPDATE
-	// 			world_game_army
+	// 			world_army
 	// 		SET
 	// 			army_colour = "00acff"
 	// 		WHERE
@@ -64,7 +64,7 @@
 
 
 
-	// $query = 'SELECT * FROM world_game_army WHERE true ORDER BY army_name LIMIT 3';
+	// $query = 'SELECT * FROM world_army WHERE true ORDER BY army_name LIMIT 3';
 	//
 	// $result = $mysqli->execute_query($query, []);
 	//
@@ -179,6 +179,7 @@
 		//exit('Recruited Battalions');
 
 	}
+
 
 
 
