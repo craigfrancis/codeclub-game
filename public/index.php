@@ -189,81 +189,40 @@
 
 	$territories = [];
 
-	$territories[1] = [
-			'name'       => 'Great Britan',
-			'colour'     => 'F07857',
-			'battalions' => 10,
-			'owner'      => 'Craig',
-			'army'       => 'MyArmy',
-		];
-	$territories[2] = [
-			'name'       => 'Western Europe',
-			'colour'     => 'F287F5',
-			'battalions' => 1234,
-			'owner'      => 'Nicolau',
-			'army'       => 'MyArmy',
-		];
+	$sql = 'SELECT
+				o.territory_id,
+				t.name AS territory_name,
+				o.army_id,
+				a.army_colour,
+				a.army_name,
+				o.battalions
+			FROM
+				world_owner AS o
+			LEFT JOIN
+				world_territories AS t ON t.id = o.territory_id
+			LEFT JOIN
+				world_army AS a ON a.id = o.army_id
+			WHERE
+				o.deleted = "0000-00-00 00:00:00"
+			ORDER BY
+				o.battalions DESC';
 
-	$territories[3] = [
-			'name'       => 'Southern Europe',
-			'colour'     => '5FF2F6',
-			'battalions' => 987654321,
-			'owner'      => 'Thea',
-			'army'       => 'MyArmy',
-		];
-	$territories[31] = [
-			'name'       => 'Queubec',
-			'colour'     => 'D49137',
-			'battalions' => 314159265,
-			'owner'      => 'Someone',
-			'army'       => 'MyArmy',
-		];
+	$parameters = [];
+	// $parameters[] = intval($var);
 
-	$territories[20] = [
-			'name'       => 'Egypt',
-			'colour'     => '53BDA5',
-			'battalions' => 7364528901,
-			'owner'      => 'Hatshepsut',
-			'army'       => 'MyArmy',
-		];
-	$territories[25] = [
-			'name'       => 'Madagascar',
-			'colour'     => 'F5C26B',
-			'battalions' => 7364528901,
-			'owner'      => 'Alex',
-			'army'       => 'MyArmy',
-		];
-	$territories[18] = [
-			'name'       => 'Japan',
-			'colour'     => 'BF2C34',
-			'battalions' => 500,
-			'owner'      => 'Japan Person',
-			'army'       => 'MyArmy',
-		];
+	$result = $mysqli->execute_query($sql, []);
 
+	while ($row = $result->fetch_assoc()) {
 
-	$territories[11] = [
-			'name'       => 'China',
-			'colour'     => '5C62D6',
-			'battalions' => 500098,
-			'owner'      => 'Ninja',
-			'army'       => 'MyArmy',
-		];
-	$territories[21] = [
-			'name'       => 'North Africa',
-			'colour'     => '3d2b24',
-			'battalions' => 9999999999,
-			'owner'      => 'Kealitile',
-			'army'       => 'MyArmy',
-		];
-	$territories[22] = [
-			'name'       => 'East Africa',
-			'colour'     => '66FF00',
-			'battalions' => 10000000000000000,
-			'owner'      => 'Anna',
-			'army'       => 'MyArmy',
-		];
+		$territories[$row['territory_id']] = [
+				'name'       => $row['territory_name'],
+				'colour'     => $row['army_colour'],
+				'battalions' => $row['battalions'],
+				'owner'      => "Eggplant",
+				'army'       => $row['army_name'],
+			];
 
+	}
 
 
 ?>
