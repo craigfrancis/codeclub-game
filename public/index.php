@@ -20,6 +20,9 @@
 
 
 
+	$army_id = 5;
+
+
 	mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 	$mysqli = new mysqli('localhost', 'stage', 'st8ge', 's-codeclub-game');
@@ -93,22 +96,27 @@
 	if (($_POST['action'] ?? '') == 'Recruit Battalions') {
 
 
+			$territory_id = intval($_POST['territory'] ?? 0);
+
 
 			$query = '
 					SELECT
-						battalions
+						battalions,
+						army_id
 					FROM
 						world_owner
 					WHERE
-						army_id = 3 AND
+						territory_id = ? AND
 						deleted = "0000-00-00 00:00:00"';
 
-			$result = $mysqli->execute_query($query, []);
+			$result = $mysqli->execute_query($query, [
+					$territory_id,
+				]);
 
 			if ($row = $result->fetch_assoc()) {
 				$current_battalions = $row['battalions'];
+				$current_army_id = $row['army_id'];
 			}
-
 			$current_battalions += 5;
 
 
@@ -121,13 +129,12 @@
 					SET
 						deleted = NOW()
 					WHERE
-						army_id = 3 AND
+						territory_id = ? AND
 						deleted = "0000-00-00 00:00:00"';
 
 			$result = $mysqli->execute_query($query,[
-
+				$territory_id,
 			]);
-
 
 
 
@@ -137,18 +144,18 @@
 						army_id,
 						battalions,
 						created,
-						deleted)
-
-					 VALUES (
-						1,
-						3,
+						deleted
+					) VALUES (
+						?,
+						?,
 						?,
 						NOW(),
 						"0000-00-00 00:00:00"
-
 					)';
 
 			$result = $mysqli->execute_query($query, [
+				$territory_id,
+				$current_army_id,
 				$current_battalions
 			]);
 
@@ -185,9 +192,8 @@
 
 
 
-
-
 	$territories = [];
+	$your_territories = [];
 
 	$sql = 'SELECT
 				o.territory_id,
@@ -205,25 +211,34 @@
 			WHERE
 				o.deleted = "0000-00-00 00:00:00"
 			ORDER BY
-				o.battalions DESC';
+				IF(o.army_id = ?, 1, 0) DESC,
+				o.army_id ASC';
 
 	$parameters = [];
 	// $parameters[] = intval($var);
 
-	$result = $mysqli->execute_query($sql, []);
+	$result = $mysqli->execute_query($sql, [
+			$army_id,
+		]);
 
 	while ($row = $result->fetch_assoc()) {
+
+		if ($row['army_id'] == $army_id) {
+
+			$your_territories[$row['territory_id']] = $row['territory_name'];
+
+		}
 
 		$territories[$row['territory_id']] = [
 				'name'       => $row['territory_name'],
 				'colour'     => $row['army_colour'],
 				'battalions' => $row['battalions'],
-				'owner'      => "Eggplant",
-				'army'       => $row['army_name'],
+				'owner'      => "MacBookPro",
+				'army_id'    => $row['army_id'],
+				'army_name'  => $row['army_name'],
 			];
 
 	}
-
 
 ?>
 <!DOCTYPE html>
@@ -239,6 +254,15 @@
 	<h1>Testing</h1>
 
 	<form action="./" method="post">
+		<select name="territory">
+
+			<?php foreach ($your_territories as $id => $name) { ?>
+
+				<option value="<?= htmlspecialchars($id) ?>"><?= htmlspecialchars($name) ?></option>
+
+			<?php } ?>
+
+		</select>
 		<input type="submit" name="action" value="Recruit Battalions" />
 	</form>
 
@@ -270,10 +294,13 @@
 					<tr data-id="' . html($id) . '" data-colour="' . html($mainColour) . '" data-text="' . html($textColour) . '" data-battalions="' . html($territory['battalions']) . '"' . ($k++ % 2 ? ' class="odd"' : '') . '>
 						<td>' . html($territory['name']) . '</td>
 						<td>' . html($territory['owner']) . '</td>
-						<td>' . html($territory['army']) . '</td>';
-				if ($territory['colour'] != '') {
+						<td>' . html($territory['army_name']) . '</td>';
+				if ($territory['army_id'] == $army_id) {
 					echo '
 						<td class="battalions" style="background-color: ' . html($mainColour) . '; color: ' . html($textColour) . ';">' . ($territory['battalions'] > 0 ? intval($territory['battalions']) : '&nbsp;') . '</td>';
+				} else if ($territory['colour'] != '') {
+					echo '
+						<td class="battalions" style="background-color: ' . html($mainColour) . '; color: ' . html($textColour) . ';"> Unavailable</td>';
 				} else {
 					echo '
 						<td>&nbsp;</td>';
