@@ -1,3 +1,27 @@
+
 body {
 	background: #EEE;
+}
+
+.error_text,
+.error_list {
+	color: #DD0000;
+	background: inherit;
+	font-weight: bold;
+}
+
+#map_table {
+	margin: 2em 0;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+#map_table th,
+#map_table td {
+	border: 1px solid #000;
+	padding: 0.2em 0.4em;
+}
+
+#map_table th {
+	background: #CCC;
 }

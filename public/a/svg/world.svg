@@ -88,7 +88,7 @@
     <path id="Line-41-Peru" d="M261.044 645.703l93.574-4.016z"/>
     <path id="Line-42-Argentina" d="M322.088 775.02l54.62-6.024"/>
   </g>
-  <g id="text" font-family="sans-serif" font-size="21" display="none">
+  <g id="country_names" font-family="sans-serif" font-size="21" display="none">
     <text id="Text-01-GreatBritain">
       <tspan x="555" y="260">Great</tspan><tspan x="552" y="286">Britain</tspan>
     </text>

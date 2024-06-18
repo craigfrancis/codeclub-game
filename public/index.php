@@ -1,196 +1,81 @@
 <?php
 
-	function html($text) {
-		return htmlspecialchars($text, ENT_QUOTES);
-	}
+//--------------------------------------------------
+// Config
 
-	function textColour ($background) {
+	require_once('../private/config.php');
 
-		$total  = hexdec(substr($background, 0, 2));
-		$total += hexdec(substr($background, 2, 2));
-		$total += hexdec(substr($background, 4, 2));
+	$action = trim($_POST['action'] ?? '');
 
-		if ($total > 230) {
-			return '000000';
-		} else {
-			return 'FFFFFF';
+//--------------------------------------------------
+// Account
+
+	// print_r($_SESSION);
+
+	$account_id = intval($_SESSION['account_id'] ?? 0);
+	$account_info = NULL;
+
+	if ($account_id > 0) {
+
+		$sql = 'SELECT
+					username,
+					last_recruit
+				FROM
+					world_account
+				WHERE
+					id = ? AND
+					deleted = "0000-00-00 00:00:00"';
+
+		$result = $db->execute_query($sql, [
+				$account_id,
+			]);
+
+		$account_info = $result->fetch_assoc();
+
+		if (!$account_info) {
+
+			echo '
+				<p>Please <a href="./login.php">Login Again</a></p>';
+
+			exit();
+
 		}
 
+	} else {
+
+		echo '
+			<p>Please <a href="./login.php">Login</a> or <a href="./register.php">Register</a></p>';
+
+		exit();
+
+
 	}
 
-
+//--------------------------------------------------
+// Army
 
 	$army_id = 5;
 
+//--------------------------------------------------
+// Recruit
 
-	mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+	if ($action === 'Recruit') {
 
-	$mysqli = new mysqli('localhost', 'stage', 'st8ge', 's-codeclub-game');
-	$mysqli->set_charset('utf8mb4');
-
-
-
-	// $new_battalions = rand(50, 100);
-
-
-	// $query = '
-	// 		INSERT world_army (
-	// 			id,
-	// 			army_colour,
-	// 			army_name
-	//
-	// 		) VALUES (
-	// 			16,
-	// 			"FFFFFF",
-	// 			"Maniacs"
-	//
-	// 		)';
-	//
-	// $result = $mysqli->execute_query($query, [
-	// ]);
-
-
-
-
-	// $query = '
-	// 		UPDATE
-	// 			world_army
-	// 		SET
-	// 			army_colour = "00acff"
-	// 		WHERE
-	// 			id = 16';
-	//
-	// $result = $mysqli->execute_query($query,[
-	//
-	// ]);
-
-
-
-
-	// $query = 'SELECT * FROM world_army WHERE true ORDER BY army_name LIMIT 3';
-	//
-	// $result = $mysqli->execute_query($query, []);
-	//
-	// foreach ($result as $row) {
-	// 	print_r($row);
-	// }
-
-
-	// echo '--------------------------------------------------' . "\n\n";
-	//
-	// $query = 'SELECT * FROM world_territories WHERE true ORDER BY army';
-	//
-	// $result = $mysqli->execute_query($query, []);
-	//
-	// foreach ($result as $row) {
-	// 	print_r($row);
-	// }
-	//
-	// exit();
-
-
-
-
-
-
-	if (($_POST['action'] ?? '') == 'Recruit Battalions') {
-
-
-			$territory_id = intval($_POST['territory'] ?? 0);
-
-
-			$query = '
-					SELECT
-						battalions,
-						army_id
-					FROM
-						world_owner
-					WHERE
-						territory_id = ? AND
-						deleted = "0000-00-00 00:00:00"';
-
-			$result = $mysqli->execute_query($query, [
-					$territory_id,
-				]);
-
-			if ($row = $result->fetch_assoc()) {
-				$current_battalions = $row['battalions'];
-				$current_army_id = $row['army_id'];
-			}
-			$current_battalions += 5;
-
-
-
-
-
-			$query = '
-					UPDATE
-						world_owner
-					SET
-						deleted = NOW()
-					WHERE
-						territory_id = ? AND
-						deleted = "0000-00-00 00:00:00"';
-
-			$result = $mysqli->execute_query($query,[
-				$territory_id,
-			]);
-
-
-
-			$query = '
-					INSERT world_owner (
-						territory_id,
-						army_id,
-						battalions,
-						created,
-						deleted
-					) VALUES (
-						?,
-						?,
-						?,
-						NOW(),
-						"0000-00-00 00:00:00"
-					)';
-
-			$result = $mysqli->execute_query($query, [
-				$territory_id,
-				$current_army_id,
-				$current_battalions
-			]);
-
-
-
-
-
-
-			// $query = '
-			// 		UPDATE
-			// 			world_owner
-			// 		SET
-			// 			battalions = 35
-			// 		WHERE
-			// 			army_id = 3 AND
-			// 			battalions = 30';
-			//
-			// $result = $mysqli->execute_query($query,[
-			//
-			// ]);
-
-			//UPDATE world_owner
-			//SET battalions = 35
-			//
-		//SET
-
-
-		//exit('Recruited Battalions');
+		require_once('../private/action-recruit.php');
 
 	}
 
+//--------------------------------------------------
+// Conquer
 
+	if ($action === 'Conquer') {
 
+		exit('TODO');
 
+	}
 
+//--------------------------------------------------
+// Current territory ownership
 
 	$territories = [];
 	$your_territories = [];
@@ -214,10 +99,7 @@
 				IF(o.army_id = ?, 1, 0) DESC,
 				o.army_id ASC';
 
-	$parameters = [];
-	// $parameters[] = intval($var);
-
-	$result = $mysqli->execute_query($sql, [
+	$result = $db->execute_query($sql, [
 			$army_id,
 		]);
 
@@ -233,10 +115,26 @@
 				'name'       => $row['territory_name'],
 				'colour'     => $row['army_colour'],
 				'battalions' => $row['battalions'],
-				'owner'      => "MacBookPro",
 				'army_id'    => $row['army_id'],
 				'army_name'  => $row['army_name'],
 			];
+
+	}
+
+//--------------------------------------------------
+// Function to determine text colour
+
+	function text_colour($background) {
+
+		$total  = hexdec(substr($background, 0, 2));
+		$total += hexdec(substr($background, 2, 2));
+		$total += hexdec(substr($background, 4, 2));
+
+		if ($total > 230) {
+			return '000000';
+		} else {
+			return 'FFFFFF';
+		}
 
 	}
 
@@ -245,35 +143,53 @@
 <html lang="en-GB">
 <head>
 	<meta charset="UTF-8" />
-	<title>Scratch Pad</title>
+	<title>Code Club Game</title>
 	<link rel="stylesheet" type="text/css" href="/a/css/core.css" />
 	<script src="/a/js/main.js" async="async"></script>
 </head>
 <body>
 
-	<h1>Testing</h1>
+	<h1>Game</h1>
 
-	<form action="./" method="post">
-		<select name="territory">
+	<p>Hi <strong><?= html($account_info['username']) ?></strong>! (<a href="./logout.php">logout</a>)</p>
 
-			<?php foreach ($your_territories as $id => $name) { ?>
+	<?php if (count($errors) > 0) { ?>
 
-				<option value="<?= htmlspecialchars($id) ?>"><?= htmlspecialchars($name) ?></option>
+		<ul class="error_list">
+
+			<?php foreach ($errors as $error) { ?>
+
+				<li><?= html($error) ?></li>
 
 			<?php } ?>
 
-		</select>
-		<input type="submit" name="action" value="Recruit Battalions" />
+		</ul>
+
+	<?php } ?>
+
+	<form action="./" method="post">
+		<fieldset>
+			<legend>Recruit Battalions</legend>
+			<select name="territory">
+
+				<?php foreach ($your_territories as $id => $name) { ?>
+
+					<option value="<?= html($id) ?>"><?= html($name) ?></option>
+
+				<?php } ?>
+
+			</select>
+			<input type="submit" name="action" value="Recruit" />
+		</fieldset>
 	</form>
 
-	<table>
-		<caption>Map Information</caption>
+	<table id="map_table">
 		<thead>
 			<tr>
 				<th scope="col">Territory</th>
-				<th scope="col">Owner</th>
 				<th scope="col">Army</th>
 				<th scope="col" class="battalions">Battalions</th>
+				<th scope="col">Action</th>
 			</tr>
 		</thead>
 		<tbody id="tableBody">
@@ -283,28 +199,57 @@
 			foreach ($territories as $id => $territory) {
 
 				if ($territory['colour'] != '') {
-					$mainColour = '#' . $territory['colour'];
-					$textColour = '#' . textColour($territory['colour']);
+					$main_colour = '#' . $territory['colour'];
+					$text_colour = '#' . text_colour($territory['colour']);
 				} else {
-					$mainColour = '#000000';
-					$textColour = '#FFFFFF';
+					$main_colour = '#000000';
+					$text_colour = '#FFFFFF';
 				}
 
 				echo '
-					<tr data-id="' . html($id) . '" data-colour="' . html($mainColour) . '" data-text="' . html($textColour) . '" data-battalions="' . html($territory['battalions']) . '"' . ($k++ % 2 ? ' class="odd"' : '') . '>
+					<tr data-id="' . html($id) . '" data-colour="' . html($main_colour) . '" data-text="' . html($text_colour) . '" data-battalions="' . html($territory['battalions']) . '"' . ($k++ % 2 ? ' class="odd"' : '') . '>
 						<td>' . html($territory['name']) . '</td>
-						<td>' . html($territory['owner']) . '</td>
 						<td>' . html($territory['army_name']) . '</td>';
+
 				if ($territory['army_id'] == $army_id) {
+
 					echo '
-						<td class="battalions" style="background-color: ' . html($mainColour) . '; color: ' . html($textColour) . ';">' . ($territory['battalions'] > 0 ? intval($territory['battalions']) : '&nbsp;') . '</td>';
+						<td class="battalions" style="background-color: ' . html($main_colour) . '; color: ' . html($text_colour) . ';">' . html($territory['battalions']) . '</td>
+						<td>
+							<form action="./" method="post">
+								<input type="number" name="battalions" value="1" min="1" step="1" max="' . html($territory['battalions']) . '" />
+								<input type="hidden" name="territory_from" value="' . html($id) . '" />
+								<select name="territory">
+									<option></option>
+									<optgroup label="Empty">
+										<option value="1">Neighbour 1</option>
+										<option value="2">Neighbour 2</option>
+										<option value="3">Neighbour 3</option>
+									</optgroup>
+									<optgroup label="Occupied">
+										<option value="4">Neighbour 4</option>
+										<option value="5">Neighbour 5</option>
+										<option value="6">Neighbour 6</option>
+									</optgroup>
+								</select>
+								<input type="submit" name="action" value="Conquer" />
+							</form>
+						</td>';
+
 				} else if ($territory['colour'] != '') {
+
 					echo '
-						<td class="battalions" style="background-color: ' . html($mainColour) . '; color: ' . html($textColour) . ';"> Unavailable</td>';
-				} else {
-					echo '
+						<td class="battalions" style="background-color: ' . html($main_colour) . '; color: ' . html($text_colour) . ';"> Unavailable</td>
 						<td>&nbsp;</td>';
+
+				} else {
+
+					echo '
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>';
+
 				}
+
 				echo '
 					</tr>' . "\n";
 

@@ -10,7 +10,10 @@
 	var map_colours = {},
 		map_svg_ref,
 		map_svg_doc,
-		path_id;
+		map_ready = false,
+		path_id,
+		button_names_ref,
+		button_names_shown = false;
 
 	function map_loaded() {
 
@@ -28,6 +31,34 @@
 			if (map_colours[path_id]) {
 				colour_refs[k].setAttribute('fill', map_colours[path_id]['c']);
 			}
+		}
+
+		map_ready = true;
+
+		if (button_names_ref) {
+			button_names_ref.removeAttribute('disabled');
+		}
+
+	}
+
+	function toggle_names() {
+
+		if (map_ready) {
+
+			var lines_wrapper = map_svg_doc.getElementById('lines'),
+				names_wrapper = map_svg_doc.getElementById('country_names');
+
+			if (lines_wrapper && names_wrapper) {
+				if (button_names_shown) {
+					lines_wrapper.style.display = 'none';
+					names_wrapper.style.display = 'none';
+				} else {
+					lines_wrapper.style.display = 'inline';
+					names_wrapper.style.display = 'inline';
+				}
+				button_names_shown = !(button_names_shown);
+			}
+
 		}
 
 	}
@@ -58,29 +89,49 @@
 			}
 
 		//--------------------------------------------------
-		// SVG ref
+		// SVG Map
 
 			map_svg_ref = document.getElementById('map');
 			if (map_svg_ref) {
 
-				map_svg_ref.style.display = 'none';
+				//--------------------------------------------------
+				// Temp hide
 
-				map_svg_doc = map_svg_ref.getSVGDocument();
+					map_svg_ref.style.display = 'none';
 
-				if (map_svg_doc) {
+				//--------------------------------------------------
+				// Toggle buttons
 
-					map_loaded();
+					var p = document.createElement('p');
 
-				} else {
+					button_names_ref = document.createElement('button');
+					button_names_ref.setAttribute('disabled', 'disabled');
+					button_names_ref.addEventListener('click', toggle_names);
+					button_names_ref.textContent = 'Names';
 
-					map_svg_ref.addEventListener('load', function() {
-							map_svg_doc = map_svg_ref.getSVGDocument();
-							if (map_svg_doc) {
-								map_loaded();
-							}
-						});
+					p.appendChild(button_names_ref);
 
-				}
+					map_svg_ref.parentNode.insertBefore(p, map_svg_ref.nextSibling);
+
+				//--------------------------------------------------
+				// SVG ref
+
+					map_svg_doc = map_svg_ref.getSVGDocument();
+
+					if (map_svg_doc) {
+
+						map_loaded();
+
+					} else {
+
+						map_svg_ref.addEventListener('load', function() {
+								map_svg_doc = map_svg_ref.getSVGDocument();
+								if (map_svg_doc) {
+									map_loaded();
+								}
+							});
+
+					}
 
 			}
 
