@@ -19,7 +19,7 @@
 		//--------------------------------------------------
 		// Check username
 
-			if (strlen($username) < 3) {
+			if (strlen($username) < 4) {
 
 				$errors[] = 'Your username needs to be at least 4 characters long.';
 

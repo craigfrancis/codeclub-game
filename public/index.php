@@ -70,7 +70,7 @@
 
 	if ($action === 'Conquer') {
 
-		exit('TODO');
+		exit('No you a bolognese eater bye bye');
 
 	}
 
