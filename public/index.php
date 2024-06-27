@@ -149,117 +149,147 @@
 </head>
 <body>
 
-	<h1>Game</h1>
+	<div id="page_wrapper">
 
-	<p>Hi <strong><?= html($account_info['username']) ?></strong>! (<a href="./logout.php">logout</a>)</p>
+		<header>
 
-	<?php if (count($errors) > 0) { ?>
+			<p>The Game</p>
 
-		<ul class="error_list">
+		</header>
 
-			<?php foreach ($errors as $error) { ?>
+		<div id="page_content">
 
-				<li><?= html($error) ?></li>
+			<nav>
 
-			<?php } ?>
+				<ul>
+					<li><a href="#">Link 1</a></li>
+					<li><a href="#">Link 2</a></li>
+					<li><a href="#">Link 3</a></li>
+					<li><a href="#">Link 4</a></li>
+					<li><a href="#">Link 5</a></li>
+				</ul>
 
-		</ul>
+			</nav>
 
-	<?php } ?>
+			<main>
 
-	<form action="./" method="post">
-		<fieldset>
-			<legend>Recruit Battalions</legend>
-			<select name="territory">
+				<h1>Play</h1>
 
-				<?php foreach ($your_territories as $id => $name) { ?>
+				<p>Hi <strong><?= html($account_info['username']) ?></strong>! (<a href="./logout.php">logout</a>)</p>
 
-					<option value="<?= html($id) ?>"><?= html($name) ?></option>
+				<?php if (count($errors) > 0) { ?>
+
+					<ul class="error_list">
+
+						<?php foreach ($errors as $error) { ?>
+
+							<li><?= html($error) ?></li>
+
+						<?php } ?>
+
+					</ul>
 
 				<?php } ?>
 
-			</select>
-			<input type="submit" name="action" value="Recruit" />
-		</fieldset>
-	</form>
+				<form action="./" method="post">
+					<fieldset>
+						<legend>Recruit Battalions</legend>
+						<select name="territory">
 
-	<table id="map_table">
-		<thead>
-			<tr>
-				<th scope="col">Territory</th>
-				<th scope="col">Army</th>
-				<th scope="col" class="battalions">Battalions</th>
-				<th scope="col">Action</th>
-			</tr>
-		</thead>
-		<tbody id="tableBody">
-		<?php
+							<?php foreach ($your_territories as $id => $name) { ?>
 
-			$k = 0;
-			foreach ($territories as $id => $territory) {
+								<option value="<?= html($id) ?>"><?= html($name) ?></option>
 
-				if ($territory['colour'] != '') {
-					$main_colour = '#' . $territory['colour'];
-					$text_colour = '#' . text_colour($territory['colour']);
-				} else {
-					$main_colour = '#000000';
-					$text_colour = '#FFFFFF';
-				}
+							<?php } ?>
 
-				echo '
-					<tr data-id="' . html($id) . '" data-colour="' . html($main_colour) . '" data-text="' . html($text_colour) . '" data-battalions="' . html($territory['battalions']) . '"' . ($k++ % 2 ? ' class="odd"' : '') . '>
-						<td>' . html($territory['name']) . '</td>
-						<td>' . html($territory['army_name']) . '</td>';
+						</select>
+						<input type="submit" name="action" value="Recruit" />
+					</fieldset>
+				</form>
 
-				if ($territory['army_id'] == $army_id) {
+				<table id="map_table">
+					<thead>
+						<tr>
+							<th scope="col">Territory</th>
+							<th scope="col">Army</th>
+							<th scope="col" class="battalions">Battalions</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody id="tableBody">
+					<?php
 
-					echo '
-						<td class="battalions" style="background-color: ' . html($main_colour) . '; color: ' . html($text_colour) . ';">' . html($territory['battalions']) . '</td>
-						<td>
-							<form action="./" method="post">
-								<input type="number" name="battalions" value="1" min="1" step="1" max="' . html($territory['battalions']) . '" />
-								<input type="hidden" name="territory_from" value="' . html($id) . '" />
-								<select name="territory">
-									<option></option>
-									<optgroup label="Empty">
-										<option value="1">Neighbour 1</option>
-										<option value="2">Neighbour 2</option>
-										<option value="3">Neighbour 3</option>
-									</optgroup>
-									<optgroup label="Occupied">
-										<option value="4">Neighbour 4</option>
-										<option value="5">Neighbour 5</option>
-										<option value="6">Neighbour 6</option>
-									</optgroup>
-								</select>
-								<input type="submit" name="action" value="Conquer" />
-							</form>
-						</td>';
+						$k = 0;
+						foreach ($territories as $id => $territory) {
 
-				} else if ($territory['colour'] != '') {
+							if ($territory['colour'] != '') {
+								$main_colour = '#' . $territory['colour'];
+								$text_colour = '#' . text_colour($territory['colour']);
+							} else {
+								$main_colour = '#000000';
+								$text_colour = '#FFFFFF';
+							}
 
-					echo '
-						<td class="battalions" style="background-color: ' . html($main_colour) . '; color: ' . html($text_colour) . ';"> Unavailable</td>
-						<td>&nbsp;</td>';
+							echo '
+								<tr data-id="' . html($id) . '" data-colour="' . html($main_colour) . '" data-text="' . html($text_colour) . '" data-battalions="' . html($territory['battalions']) . '"' . ($k++ % 2 ? ' class="odd"' : '') . '>
+									<td>' . html($territory['name']) . '</td>
+									<td>' . html($territory['army_name']) . '</td>';
 
-				} else {
+							if ($territory['army_id'] == $army_id) {
 
-					echo '
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>';
+								echo '
+									<td class="battalions" style="background-color: ' . html($main_colour) . '; color: ' . html($text_colour) . ';">' . html($territory['battalions']) . '</td>
+									<td>
+										<form action="./" method="post">
+											<input type="number" name="battalions" value="1" min="1" step="1" max="' . html($territory['battalions']) . '" />
+											<input type="hidden" name="territory_from" value="' . html($id) . '" />
+											<select name="territory">
+												<option></option>
+												<optgroup label="Empty">
+													<option value="1">Neighbour 1</option>
+													<option value="2">Neighbour 2</option>
+													<option value="3">Neighbour 3</option>
+												</optgroup>
+												<optgroup label="Occupied">
+													<option value="4">Neighbour 4</option>
+													<option value="5">Neighbour 5</option>
+													<option value="6">Neighbour 6</option>
+												</optgroup>
+											</select>
+											<input type="submit" name="action" value="Conquer" />
+										</form>
+									</td>';
 
-				}
+							} else if ($territory['colour'] != '') {
 
-				echo '
-					</tr>' . "\n";
+								echo '
+									<td class="battalions" style="background-color: ' . html($main_colour) . '; color: ' . html($text_colour) . ';"> Unavailable</td>
+									<td>&nbsp;</td>';
 
-			}
+							} else {
 
-		?>
-		</tbody>
-	</table>
+								echo '
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>';
 
-	<object id="map" type="image/svg+xml" data="/a/svg/1497636789-world.svg" width="735" height="460"></object>
+							}
+
+							echo '
+								</tr>' . "\n";
+
+						}
+
+					?>
+					</tbody>
+				</table>
+
+				<object id="map" type="image/svg+xml" data="/a/svg/1497636789-world.svg" width="735" height="460"></object>
+
+			</main>
+
+		</div>
+
+	</div>
 
 </body>
 </html>
