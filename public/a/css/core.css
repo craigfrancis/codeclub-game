@@ -35,10 +35,21 @@ body {
 
 header {
 	background: #CEC;
+	background-image: linear-gradient(#87D3F8, 	#a2bffe);
+	/*background: #FFFFFF url('/a/img/map.jpg') no-repeat top center;*/
 	border: 1px solid #000;
+	min-height: 122px;
 	text-align: center;
 	font-weight: bold;
-	font-size: 1.5sem; 
+	font-size: 1.5em;
+}
+
+header p {
+	background: linear-gradient(#FCF4A3, #FFE968);
+	color: transparent;
+	background-clip: text;
+	font-size: 2em
+	/*text-shadow: #FFF 1px 0 2px;*/
 }
 
 #page_content {
@@ -48,18 +59,20 @@ header {
 
 nav {
 	background: #FFF4BC;
+	background: linear-gradient(#FCF4A3, #FFE968);
 	width: 10em;
 	flex-grow: 1;
 }
 
 main {
 	background: #D1C1F2;
+	background: linear-gradient( #D1C1F2, #AF69EF);
 	padding: 0 2em;
 	border-left: 0.1em solid #000;
 }
 
 main object {
-	
+
 	width: 100%;
 	height: auto;
 	border: 0.1em solid #000
@@ -69,3 +82,10 @@ fieldset {
 
 
 	border: solid; 000
+	}
+
+h1 {
+	background: linear-gradient(#FCF4A3, #FFE968);
+	color: transparent;
+	background-clip: text;
+	}

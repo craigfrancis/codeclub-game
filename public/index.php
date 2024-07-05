@@ -70,7 +70,7 @@
 
 	if ($action === 'Conquer') {
 
-		exit('No you a bolognese eater bye bye');
+		exit('No you are bolognese eater bye bye');
 
 	}
 
@@ -153,7 +153,7 @@
 
 		<header>
 
-			<p>The Game</p>
+			<p>Welcome To</p>
 
 		</header>
 
@@ -173,7 +173,7 @@
 
 			<main>
 
-				<h1>Play</h1>
+				<h1> WORLD DOMINATION</h1>
 
 				<p>Hi <strong><?= html($account_info['username']) ?></strong>! (<a href="./logout.php">logout</a>)</p>
 
