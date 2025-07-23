@@ -33,17 +33,43 @@
 //--------------------------------------------------
 // Not too frequently
 
-	if ($account_info['last_recruit'] !== '0000-00-00 00:00:00') {
+	// if ($account_info['last_recruit'] !== '0000-00-00 00:00:00') {
+	//
+	// 	$last_recruit = new DateTime($account_info['last_recruit']);
+	//
+	// 	$diff = ($now->getTimestamp() - $last_recruit->getTimestamp());
+	//
+	// 	if ($diff < 60) {
+	//
+	// 		$errors[] = 'You need to wait at least 1 minute before recruiting more battalions!';
+	//
+	// 	}
+	//
+	// }
 
-		$last_recruit = new DateTime($account_info['last_recruit']);
+	$sql = 'SELECT
+				created,
+				account_id,
+				action_type
+			FROM
+				world_account_move
+			WHERE
+				created = ? AND
+				account_id = ? AND
+				action_type = ? AND
+				variable = ?';
 
-		$diff = ($now->getTimestamp() - $last_recruit->getTimestamp());
+	$result = $db->execute_query($sql, [
+			$variable,
+		]);
 
-		if ($diff < 5) {
+	if ($row = $result->fetch_assoc()) {
 
-			$errors[] = 'You need to wait at least 5 seconds before recruiting more battalions!';
+		$field1 = $row['field_1'];
 
-		}
+	} else {
+
+		$errors[] = 'Example Error.';
 
 	}
 
@@ -55,7 +81,9 @@
 		//--------------------------------------------------
 		// New battalion count
 
-			$current_battalions += 5;
+			$new_battalions = 10;
+
+			$current_battalions += $new_battalions;
 
 		//--------------------------------------------------
 		// Delete old record
@@ -93,6 +121,34 @@
 					$territory_id,
 					$army_id,
 					$current_battalions
+				]);
+
+		//--------------------------------------------------
+		// Add new record
+
+			$sql = 'INSERT INTO world_account_move (
+						account_id,
+						action_type,
+						action_from,
+						action_to,
+						action_battalions,
+						created
+					) VALUES (
+						?,
+						?,
+						?,
+						?,
+						?,
+						?
+					)';
+
+			$db->execute_query($sql, [
+					$account_id,
+					'recruit',
+					$territory_id,
+					0,
+					$new_battalions,
+					$now->format('Y-m-d H:i:s')
 				]);
 
 		//--------------------------------------------------

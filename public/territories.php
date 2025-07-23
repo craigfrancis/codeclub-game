@@ -75,3 +75,5 @@
 			'owner'      => 'Anna',
 			'army'       => 'MyArmy',
 		];
+		
+	print_r($territories);

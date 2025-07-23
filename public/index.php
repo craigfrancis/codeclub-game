@@ -70,7 +70,7 @@
 
 	if ($action === 'Conquer') {
 
-		exit('No you are bolognese eater bye bye');
+		exit('You have been very naughty. Go sit in the corner and think about what you have done.');
 
 	}
 
@@ -117,7 +117,41 @@
 				'battalions' => $row['battalions'],
 				'army_id'    => $row['army_id'],
 				'army_name'  => $row['army_name'],
+				'neighbours' => [],
 			];
+
+	}
+
+	foreach (array_chunk(array_keys($territories), 500) as $ids_chunk) {
+
+		$parameters = $ids_chunk;
+
+		$in_sql = array_fill(0, count($ids_chunk), '?');
+		$in_sql = implode(',', $in_sql);
+
+		$sql = 'SELECT
+					n.source_id,
+					n.destination_id,
+					t.name AS destination_name
+				FROM
+					world_neighbour AS n
+				LEFT JOIN
+					world_territories AS t ON t.id = n.destination_id
+				WHERE
+					n.source_id IN (' . $in_sql . ')';
+
+		// print_r($sql);
+
+		$result = $db->execute_query($sql, $parameters);
+
+		while ($row = $result->fetch_assoc()) {
+
+			$owned = array_key_exists($row['destination_id'], $territories);
+			$owned = ($owned ? 'Occupied' : 'Empty');
+
+			$territories[$row['source_id']]['neighbours'][$owned][$row['destination_id']] = $row['destination_name'];
+
+		}
 
 	}
 
@@ -162,7 +196,7 @@
 			<nav>
 
 				<ul>
-					<li><a href="#">Link 1</a></li>
+					<li><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Link 1</a></li>
 					<li><a href="#">Link 2</a></li>
 					<li><a href="#">Link 3</a></li>
 					<li><a href="#">Link 4</a></li>
@@ -244,17 +278,42 @@
 											<input type="number" name="battalions" value="1" min="1" step="1" max="' . html($territory['battalions']) . '" />
 											<input type="hidden" name="territory_from" value="' . html($id) . '" />
 											<select name="territory">
-												<option></option>
-												<optgroup label="Empty">
-													<option value="1">Neighbour 1</option>
-													<option value="2">Neighbour 2</option>
-													<option value="3">Neighbour 3</option>
-												</optgroup>
-												<optgroup label="Occupied">
-													<option value="4">Neighbour 4</option>
-													<option value="5">Neighbour 5</option>
-													<option value="6">Neighbour 6</option>
-												</optgroup>
+												<option></option>';
+
+								krsort($territory['neighbours']);
+
+								foreach ($territory['neighbours'] as $owned => $options) {
+
+									if (count($options) > 0) {
+
+										echo '
+												<optgroup label="' . html($owned) . '">';
+
+										foreach ($options as $neighbour_id => $neighbour_name) {
+											echo '
+													<option value="' . html($neighbour_id) . '">' . html($neighbour_name) . '</option>';
+										}
+
+										echo '
+												</optgroup>';
+
+									}
+
+								}
+
+								// echo '
+								// 				<optgroup label="Empty">
+								// 					<option value="1">Neighbour 1</option>
+								// 					<option value="2">Neighbour 2</option>
+								// 					<option value="3">Neighbour 3</option>
+								// 				</optgroup>
+								// 				<optgroup label="Occupied">
+								// 					<option value="4">Neighbour 4</option>
+								// 					<option value="5">Neighbour 5</option>
+								// 					<option value="6">Neighbour 6</option>
+								// 				</optgroup>';
+
+								echo '
 											</select>
 											<input type="submit" name="action" value="Conquer" />
 										</form>
